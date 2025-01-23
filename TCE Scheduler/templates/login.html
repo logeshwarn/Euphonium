@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg border-0 rounded-lg fade-in">
+                <div class="card-header bg-gradient-primary text-white text-center py-4">
+                    <h2 class="mb-0">Welcome Back</h2>
+                    <p class="mb-0">Event Scheduling System</p>
+                </div>
+                <div class="card-body p-5">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                    <div class="role-toggles mb-4">
+                        <div class="row">
+                            <div class="col-6">
+                                <input type="radio" class="btn-check" name="role" id="teacher-role" value="teacher" checked>
+                                <label class="btn btn-outline-primary w-100" for="teacher-role">
+                                    <i class="fas fa-chalkboard-teacher fa-2x mb-2"></i>
+                                    <br>Teacher
+                                </label>
+                            </div>
+                            <div class="col-6">
+                                <input type="radio" class="btn-check" name="role" id="student-role" value="student">
+                                <label class="btn btn-outline-primary w-100" for="student-role">
+                                    <i class="fas fa-user-graduate fa-2x mb-2"></i>
+                                    <br>Student
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form method="POST" action="" class="slide-up">
+                        {{ form.hidden_tag() }}
+                        {{ form.role(class="d-none", id="role-field") }}
+                        
+                        <div class="mb-3">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                {{ form.email(class="form-control", placeholder="Email Address") }}
+                            </div>
+                            {% if form.email.errors %}
+                                {% for error in form.email.errors %}
+                                    <small class="text-danger">{{ error }}</small>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                {{ form.password(class="form-control", placeholder="Password") }}
+                            </div>
+                            {% if form.password.errors %}
+                                {% for error in form.password.errors %}
+                                    <small class="text-danger">{{ error }}</small>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-auto">
+                                <div class="form-check">
+                                    {{ form.remember(class="form-check-input") }}
+                                    {{ form.remember.label(class="form-check-label") }}
+                                </div>
+                            </div>
+                            <div class="col text-end">
+                                <a href="#" class="text-primary">Forgot Password?</a>
+                            </div>
+                        </div>
+
+                        <div class="d-grid">
+                            {{ form.submit(class="btn btn-primary btn-lg") }}
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center py-3">
+                    <div class="small">
+                        Need an account? <a href="{{ url_for('auth.register') }}" class="text-primary">Sign up here</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const teacherRole = document.getElementById('teacher-role');
+    const studentRole = document.getElementById('student-role');
+    const roleField = document.getElementById('role-field');
+
+    function updateRole() {
+        roleField.value = teacherRole.checked ? 'teacher' : 'student';
+    }
+
+    teacherRole.addEventListener('change', updateRole);
+    studentRole.addEventListener('change', updateRole);
+    updateRole(); // Set initial state
+});
+</script>
+
+<style>
+.btn-check:checked + .btn-outline-primary {
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    border-color: transparent;
+}
+
+.role-toggles .btn {
+    padding: 1rem;
+    transition: all 0.3s ease;
+}
+
+.role-toggles .btn:hover {
+    transform: translateY(-2px);
+}
+
+.card-header {
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+}
+
+.input-group-text {
+    background-color: transparent;
+    border-right: none;
+}
+
+.form-control {
+    border-left: none;
+}
+
+.input-group:focus-within {
+    box-shadow: 0 0 0 0.25rem rgba(99, 102, 241, 0.25);
+}
+
+.input-group:focus-within .input-group-text,
+.input-group:focus-within .form-control {
+    border-color: #6366f1;
+}
+</style>
+{% endblock %} 

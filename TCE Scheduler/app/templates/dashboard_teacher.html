@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %}Teacher Dashboard{% endblock %}
+
+{% block content %}
+<div class="container py-4 fade-in">
+    <!-- Teacher Profile Section -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card welcome-card shadow slide-up">
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <i class="fas fa-user-circle fa-4x"></i>
+                    </div>
+                    <h4>Welcome, {{ current_user.username }}</h4>
+                    <p class="mb-1"><i class="fas fa-book me-2"></i>{{ current_user.subject }}</p>
+                    <p class="mb-1"><i class="fas fa-building me-2"></i>{{ current_user.department }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="stat-card shadow slide-up">
+                        <i class="fas fa-calendar-check stat-icon"></i>
+                        <div class="stat-value">{{ upcoming_count }}</div>
+                        <div class="stat-label">Upcoming Events</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card shadow slide-up">
+                        <i class="fas fa-users stat-icon"></i>
+                        <div class="stat-value">{{ upcoming_events|length }}</div>
+                        <div class="stat-label">Active Events</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card shadow slide-up">
+                        <i class="fas fa-clock stat-icon"></i>
+                        <div class="stat-value">{{ total_hours }}</div>
+                        <div class="stat-label">Hours Scheduled</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Schedule Management Section -->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow slide-up">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="fas fa-calendar me-2"></i>Upcoming Schedule</h5>
+                </div>
+                <div class="card-body">
+                    {% if upcoming_events %}
+                        <div class="list-group">
+                            {% for event in upcoming_events %}
+                                <div class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1">{{ event.title }}</h5>
+                                        <small class="text-muted">{{ event.start_time.strftime('%Y-%m-%d %H:%M') }}</small>
+                                    </div>
+                                    <p class="mb-1">{{ event.description[:100] }}{% if event.description|length > 100 %}...{% endif %}</p>
+                                    <small class="text-muted">
+                                        <i class="fas fa-map-marker-alt me-1"></i>{{ event.location }}
+                                    </small>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-calendar-times fa-3x mb-3 text-muted"></i>
+                            <p class="mb-0">No upcoming events scheduled</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow slide-up">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="fas fa-tasks me-2"></i>Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('main.create_event') }}" class="btn btn-primary">
+                            <i class="fas fa-plus-circle me-2"></i>Create New Event
+                        </a>
+                        <a href="{{ url_for('main.past_events') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-history me-2"></i>View Past Events
+                        </a>
+                        <a href="{{ url_for('main.upcoming_events') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-calendar-alt me-2"></i>View Upcoming Events 
+                            <span class="badge bg-primary">{{ upcoming_events|length if upcoming_events else 0 }}</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
